@@ -1,36 +1,33 @@
-import { useState, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import NumberList from './NumberList';
 
 function App() {
-  const [number, setNumber] = useState(1);
-  const [dark, setDark] = useState(false);
+  const [name, setName] = useState('');
 
-  const getItems = useCallback(
-    (incrementValue) => {
-      return [
-        number + incrementValue,
-        number + 1 + incrementValue,
-        number + 2 + incrementValue,
-      ];
-    },
-    [number]
-  );
-  const theme = {
-    backgroundColor: dark ? '#333' : '#FFF',
-    color: dark ? '#FFF' : '#333',
-  };
+  const renderCount = useRef(0);
+
+  const inputRef = useRef();
+
+  useEffect(() => {
+    renderCount.current = renderCount.current + 1;
+  })
+
+  const focusInput = () => {
+    inputRef.current.focus();
+    inputRef.current.value = 'Raftello'
+  }
 
   return (
-    <div style={theme}>
+    <div className="App">
       <input
-        type="number"
-        value={number}
-        onChange={(e) => setNumber(parseInt(e.target.value))}
+        ref={inputRef}
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
-      <button onClick={() => setDark((prevDark) => !prevDark)}>
-        Temayı Değiştir
-      </button>
-      <NumberList getItems={getItems} />
+      <div>Benim adım {name}</div>
+      <div>{renderCount.current} defa render oldu</div>
+      <button onClick={focusInput}>Focus</button>
     </div>
   );
 }
