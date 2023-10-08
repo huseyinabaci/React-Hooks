@@ -1,6 +1,10 @@
 import logo from "./logo.svg";
 import "./App.css";
+import React from "react";
 import { useReducer } from "react";
+import Calculate from "./Calculate";
+
+export const NumberContext = React.createContext();
 
 const initialValue = 0;
 
@@ -21,10 +25,9 @@ function App() {
   const [count, dispatch] = useReducer(reducer, initialValue);
   return (
     <div className="App">
-      <div>Sayı = {count}</div>
-      <button onClick={() => dispatch("increment")}>Arttır</button>
-      <button onClick={() => dispatch("decrement")}>Azalt</button>
-      <button onClick={() => dispatch("reset")}>Sıfırla</button>
+      <NumberContext.Provider value={{ count: count, dispatch: dispatch }}>
+        <Calculate />
+      </NumberContext.Provider>
     </div>
   );
 }
