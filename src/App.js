@@ -1,37 +1,38 @@
-import { useState, useMemo } from 'react';
+import { useState, useCallback } from 'react';
+import NumberList from './NumberList';
 
 function App() {
-  const [number, setNumber] = useState(0);
+  const [number, setNumber] = useState(1);
   const [dark, setDark] = useState(false);
-  const doubleNumber = useMemo(() => {
-    return slowFunc(number);
-  },[number])
+
+  const getItems = useCallback(
+    (incrementValue) => {
+      return [
+        number + incrementValue,
+        number + 1 + incrementValue,
+        number + 2 + incrementValue,
+      ];
+    },
+    [number]
+  );
   const theme = {
     backgroundColor: dark ? '#333' : '#FFF',
     color: dark ? '#FFF' : '#333',
   };
 
   return (
-    <div className="App">
-      <>
-        <input
-          type="number"
-          value={number}
-          onChange={(e) => setNumber(parseInt(e.target.value))}
-        />
-        <button onClick={() => setDark((prevDark) => !prevDark)}>
-          Temayı Değiştir
-        </button>
-        <div style={theme}>{doubleNumber}</div>
-      </>
+    <div style={theme}>
+      <input
+        type="number"
+        value={number}
+        onChange={(e) => setNumber(parseInt(e.target.value))}
+      />
+      <button onClick={() => setDark((prevDark) => !prevDark)}>
+        Temayı Değiştir
+      </button>
+      <NumberList getItems={getItems} />
     </div>
   );
-}
-
-function slowFunc(num) {
-  console.log('Fonksiyon çağrıldı');
-  for (let i = 0; i <= 1000000000; i++) {}
-  return num * 2;
 }
 
 export default App;
