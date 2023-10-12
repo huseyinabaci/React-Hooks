@@ -1,34 +1,32 @@
-import { useState, useRef, useEffect } from 'react';
-import NumberList from './NumberList';
+import { useState, useTransition } from 'react';
 
 function App() {
-  const [name, setName] = useState('');
+  const [input, setInput] = useState('');
+  const [myList, setMyList] = useState([]);
+  const [isPending, startTransition] = useTransition();
 
-  const renderCount = useRef(0);
+  const handleChange = (e) => {
+    setInput(e.target.value);
 
-  const inputRef = useRef();
-
-  useEffect(() => {
-    renderCount.current = renderCount.current + 1;
-  })
-
-  const focusInput = () => {
-    inputRef.current.focus();
-    inputRef.current.value = 'Raftello'
-  }
+    startTransition(() => {
+      const myArray = [];
+      for (let i = 0; i < 2000; i++) {
+        myArray.push(e.target.value);
+      }
+      setMyList(myArray);
+    });
+  };
 
   return (
-    <div className="App">
-      <input
-        ref={inputRef}
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <div>Benim adım {name}</div>
-      <div>{renderCount.current} defa render oldu</div>
-      <button onClick={focusInput}>Focus</button>
-    </div>
+    <>
+      <input type="text" value={input} onChange={handleChange} />
+
+      {isPending
+        ? 'Yükleniyor...'
+        : myList.map((item, index) => {
+            return <div key={index}>{item}</div>;
+          })}
+    </>
   );
 }
 
